@@ -7,13 +7,18 @@ FROM phusion/baseimage:0.9.18
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
 
-# ...put your own build instructions here...
-
 # https://github.com/phusion/baseimage-docker#upgrading-the-operating-system-inside-the-container
 RUN apt-get update && apt-get upgrade -y -o Dpkg::Options::="--force-confold"
 
 # install vsftpd
-RUN apt-get install -y --no-install-recommends vsftpd 
+RUN apt-get install -y --no-install-recommends vsftpd
 
 # Clean up APT when done.
+# TODO does this go at the end of the file?
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+COPY vsftpd.conf /etc
+RUN mkdir /etc/service/vsftpd
+ADD vsftpd.sh /etc/service/vsftpd/run
+
+EXPOSE 20 21
