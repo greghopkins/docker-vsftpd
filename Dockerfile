@@ -19,7 +19,12 @@ RUN apt-get install -y --no-install-recommends vsftpd
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY vsftpd.conf /etc
+
 RUN mkdir /etc/service/vsftpd
 ADD vsftpd.sh /etc/service/vsftpd/run
+
+RUN mkdir -p /var/run/vsftpd/empty
+RUN mkdir -p /var/ftp/public
+RUN chown ftp:ftp /var/ftp/public
 
 EXPOSE 20 21
